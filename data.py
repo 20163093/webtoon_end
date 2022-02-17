@@ -8,17 +8,24 @@ driver.get('https://comic.naver.com/webtoon/weekday')
 driver.implicitly_wait(3)
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 daily_webtoon = soup.find('div', {'class':'end_page'}).find('div', id='container').find('div', id='content').find('div', {'class':'list_area daily_all'})
-print(daily_webtoon.prettify())
 
-def click_each_webtoon_name():
-    col = daily_webtoon.find_all('div', {'class':'col'})
-    info = []
-    for c in col:
-        li = c.find('div', {'class':'col_inner'}).find('ul').find_all('li')        
-        for l in li:
-            driver.find_element_by_class_name('title').click()
-            break
-        break
+col = daily_webtoon.find_all('div', {'class':'col'})
+info = []
+title_list = []
+for c in col:
+    li = c.find('div', {'class':'col_inner'}).find('ul').find_all('li')        
+    for l in li:
+        driver.find_element_by_class_name('title').click()
+        title = l.find('a', {'class':'title'}).text.strip()
+        if title not in title_list: # 타이틀 목록에 없는 타이틀을 만났을 때만!
+            title_list.append(title)
+            try:
+                # '다음 화를 미리 만나보세요'가 있는 경우
+                pass
+            except:
+                # '다음 화를 미리 만나보세요'가 없는 경우
+                pass
+    break
 
 # def extract_webtoon_info():
 #     col = daily_webtoon.find_all('div', {'class':'col'})
